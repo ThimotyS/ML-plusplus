@@ -4,8 +4,8 @@ GUI implementation of ML-Quadrat. The DSL is implemented using [Sirius-Web](http
 # Software Requirements
 To run the project
 - [Docker](https://www.docker.com/)
-- [Maven]([https://www.java.com/nl/](https://maven.apache.org/index.html))
-- [npm]([https://www.java.com/nl/](https://www.npmjs.com/))
+- [Maven]([https://www.java.com/nl/](https://maven.apache.org/index.html)
+- [npm]([https://www.java.com/nl/](https://www.npmjs.com/)
 
 # Optional:
 To run code generators in offline mode:
