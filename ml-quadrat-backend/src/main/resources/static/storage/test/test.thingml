@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<thingML:ThingMLModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:thingML="http://www.thingml.org/xtext/ThingML">
+  <types xmi:type="thingML:Thing" name="New Thing1">
+    <dataAnalytics name="NewDataAnalytics" dataset="wddfdf" labels="SEMI" timestamps="NOT_SET" advanced_imputation="OFF" lag_features="OFF" rolling_window="ON" resample="WEEKLY" automl="ON" ensemble_methods="STACKING" plots="Smoothing,Aggregation,Downsampling,">
+      <algorithm xmi:type="thingML:NN_MultilayerPerceptron" name="my_nn" prediction_plots="CONFUSION_MATRIX" activation="sigmoid" optimizer="Adagrad" learning_rate_mode="PolynomialDecay" learning_rate_init="stuff" loss="SparseCategoricalCrossentropy">
+        <hidden_layers intValue="1"/>
+        <hidden_layers intValue="2"/>
+        <alpha doubleValue="123"/>
+        <batch_size intValue="123"/>
+        <power doubleValue="123"/>
+        <power_t/>
+        <random_state intValue="233"/>
+        <tol doubleValue="123"/>
+        <validation_fraction doubleValue="123"/>
+        <epsilon doubleValue="2"/>
+        <n_iter_no_change intValue="2"/>
+        <max_fun intValue="1"/>
+        <epochs intValue="123"/>
+      </algorithm>
+    </dataAnalytics>
+  </types>
+</thingML:ThingMLModel>

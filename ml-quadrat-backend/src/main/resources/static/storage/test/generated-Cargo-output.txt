@@ -1,0 +1,22 @@
+[preprocess.py] Shape of X_train: (13, 11)
+[preprocess.py] Shape of y_train: (13,)
+[preprocess.py] X_train, X_test, y_train, y_test created in unsupervised mode
+[preprocess.py] Shape of X_train after split: (10, 11)
+[preprocess.py] Shape of X_test: (3, 11)
+[preprocess.py] Shape of y_train after split: (10,)
+[preprocess.py] Shape of y_test: (3,)
+preprocess.py exited with code: 0
+📁 Saving data to dataset...
+✅ Feature [OutagePredictor_cpu_user_var] = 0.467286283756275
+✅ Feature [OutagePredictor_cpu_system_var] = 0.1502007371541757
+✅ Feature [OutagePredictor_cpu_wait_var] = 0.0
+✅ Feature [OutagePredictor_disk_read_var] = 0.0
+✅ Feature [OutagePredictor_disk_write_var] = 731.092869
+✅ Feature [OutagePredictor_mem_used_var] = 1.1017336E7
+✅ Feature [OutagePredictor_swap_used_var] = 0.0
+✅ Feature [OutagePredictor_net_eth0_rx_var] = 66214.013408
+✅ Feature [OutagePredictor_net_eth0_tx_var] = 13203.99324
+✅ Feature [OutagePredictor_net_eth1_rx_var] = 2011510.66592
+✅ Feature [OutagePredictor_net_eth1_tx_var] = 2011510.66592
+✅ Feature [OutagePredictor_sch_threads_var] = 401.0
+⚠️  Prediction file not found (/home/uwubuntu/docker-full-stack/ml-quadrat-backend/src/main/resources/static/storage/test/generated-Cargo/python_java/src/python-scripts/outputs/prediction.txt) – skipping preds.

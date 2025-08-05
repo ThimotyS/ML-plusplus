@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<thingml:ThingMLModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:thingml="domain://thingML">
+  <types xmi:type="thingml:ObjectType" name="String">
+    <annotations name="type_checker" value="String"/>
+    <annotations name="c_type" value="char *"/>
+    <annotations name="java_type" value="String"/>
+    <annotations name="js_type" value="String"/>
+  </types>
+  <types xmi:type="thingml:PrimitiveType" name="Double" ByteSize="4">
+    <annotations name="type_checker" value="Real"/>
+    <annotations name="c_type" value="double"/>
+    <annotations name="java_type" value="double"/>
+    <annotations name="js_type" value="float"/>
+  </types>
+  <types xmi:type="thingml:Thing" name="OutageMessages" fragment="true">
+    <messages name="request_server_data"/>
+    <messages name="response_server_data">
+      <parameters name="cpu_user">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="cpu_system">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="cpu_wait">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="disk_read">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="disk_write">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="mem_used">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="swap_used">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="net_eth0_rx">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="net_eth0_tx">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="net_eth1_rx">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="net_eth1_tx">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="sch_threads">
+        <typeRef type="//@types.1"/>
+      </parameters>
+    </messages>
+    <messages name="request_outage_prediction">
+      <parameters name="cpu_user">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="cpu_system">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="cpu_wait">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="disk_read">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="disk_write">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="mem_user">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="swap_used">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="net_eth0_rx">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="net_eth0_tx">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="net_eth1_rx">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="net_eth1_tx">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="sch_threads">
+        <typeRef type="//@types.1"/>
+      </parameters>
+    </messages>
+  </types>
+  <types xmi:type="thingml:Thing" name="Server" includes="//@types.2">
+    <ports xmi:type="thingml:RequiredPort" name="server_service" sends="//@types.2/@messages.1" receives="//@types.2/@messages.0"/>
+    <properties name="cpu_user">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0.467286283756275"/>
+      </typeRef>
+    </properties>
+    <properties name="cpu_system">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0.1502007371541757"/>
+      </typeRef>
+    </properties>
+    <properties name="cpu_wait">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0.0"/>
+      </typeRef>
+    </properties>
+    <properties name="disk_read">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0.0"/>
+      </typeRef>
+    </properties>
+    <properties name="disk_write">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="731.092869"/>
+      </typeRef>
+    </properties>
+    <properties name="mem_used">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="11017336.0"/>
+      </typeRef>
+    </properties>
+    <properties name="swap_used">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="462132.0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth0_rx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="66214.013408"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth0_tx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="13203.99324"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth1_rx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="2011510.66592"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth1_tx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="75484.324176"/>
+      </typeRef>
+    </properties>
+    <properties name="sch_threads">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="401.0"/>
+      </typeRef>
+    </properties>
+    <behaviour name="ServerBehaviour" initial="//@types.3/@behaviour/@substate.0">
+      <substate name="Initial State">
+        <internal>
+          <event xmi:type="thingml:ReceiveMessage" port="//@types.3/@ports.0" message="//@types.2/@messages.0"/>
+          <action xmi:type="thingml:ActionBlock">
+            <actions xmi:type="thingml:ActionValue" actionValue="server_service!response_server_data(cpu_user,cpu_system,cpu_wait,disk_read,disk_write,mem_used,swap_used,net_eth0_rx,net_eth0_tx,net_eth1_rx,net_eth1_tx,sch_threads)"/>
+          </action>
+        </internal>
+      </substate>
+    </behaviour>
+  </types>
+  <types xmi:type="thingml:Thing" name="CMS" includes="//@types.2">
+    <ports xmi:type="thingml:RequiredPort" name="outage_service" sends="//@types.2/@messages.2"/>
+    <ports xmi:type="thingml:ProvidedPort" name="server_service" sends="//@types.2/@messages.0" receives="//@types.2/@messages.1"/>
+    <properties name="cpu_user">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="cpu_system">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="cpu_wait">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="disk_read">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="disk_write">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="mem_used">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="swap_used">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth0_rx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth0_tx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth1_rx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth1_tx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="sch_threads">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <behaviour name="CMSBehaviour" initial="//@types.4/@behaviour/@substate.0">
+      <substate name="GetServerData">
+        <entry xmi:type="thingml:ActionBlock">
+          <actions xmi:type="thingml:ActionValue" actionValue="server_service!request_server_data()"/>
+        </entry>
+        <outgoing target="//@types.4/@behaviour/@substate.1"/>
+      </substate>
+      <substate name="SetData">
+        <internal>
+          <event xmi:type="thingml:ReceiveMessage" name="e" port="//@types.3/@ports.0" message="//@types.2/@messages.1"/>
+          <action xmi:type="thingml:ActionBlock">
+            <actions xmi:type="thingml:ActionValue" actionValue="cpu_user = e.cpu_user"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="cpu_system = e.cpu_system"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="cpu_wait = e.cpu_wait"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="disk_read = e.disk_read"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="disk_write = e.disk_write"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="mem_used = e.mem_used"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="net_eth0_rx = e.net_eth0_rx"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="net_eth0_tx = e.net_eth0_tx"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="net_eth1_rx = e.net_eth1_rx"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="net_eth1_tx = e.net_eth1_rx"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="sch_threads = e.sch_threads"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="outage_service!request_outage_prediction(cpu_user,cpu_system,cpu_wait,disk_read,disk_write,mem_used,swap_used,net_eth0_rx,net_eth0_tx,net_eth1_rx,net_eth1_tx,sch_threads)"/>
+          </action>
+        </internal>
+      </substate>
+    </behaviour>
+  </types>
+  <types xmi:type="thingml:Thing" name="OutagePredictor" includes="//@types.2">
+    <ports xmi:type="thingml:ProvidedPort" name="outage_service" receives="//@types.2/@messages.2"/>
+    <properties name="cpu_user">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="cpu_system">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="cpu_wait">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="prediction">
+      <typeRef type="//@types.0">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="disk_read">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="disk_write">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="mem_used">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="swap_used">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth0_rx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth0_tx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth1_rx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="net_eth1_tx">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <properties name="sch_threads">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingml:ExpressionValue" ExpressionValue="0"/>
+      </typeRef>
+    </properties>
+    <dataAnalytics name="outage_da" dataset="app_server0.csv" labels="ON" timestamps="OFF" preprocess_feature_scaler="StandardScaler" sequential="" autoML="OFF" features="//@types.3/@properties.0 //@types.3/@properties.1 //@types.3/@properties.2 //@types.3/@properties.3 //@types.3/@properties.4 //@types.3/@properties.5 //@types.3/@properties.6 //@types.3/@properties.7 //@types.3/@properties.8 //@types.3/@properties.9 //@types.3/@properties.10 //@types.3/@properties.11" predictionResults="//@types.5/@properties.3">
+      <modelAlgorithm xmi:type="thingml:NN_MultilayerPerceptron" name="my_nn_mlp" activation="relu" optimizer="adam" loss="SparseCategoricalCrossentropy"/>
+    </dataAnalytics>
+    <behaviour name="OutageBehaviour" initial="//@types.5/@behaviour/@substate.0">
+      <substate name="Preprocess">
+        <entry xmi:type="thingml:ActionBlock">
+          <actions xmi:type="thingml:DAPreprocessAction" dataAnalytics="//@types.5/@dataAnalytics.0"/>
+        </entry>
+        <outgoing target="//@types.5/@behaviour/@substate.2"/>
+      </substate>
+      <substate name="Train">
+        <entry xmi:type="thingml:ActionBlock">
+          <actions xmi:type="thingml:DATrainAction" dataAnalytics="//@types.5/@dataAnalytics.0"/>
+        </entry>
+        <outgoing target="//@types.5/@behaviour/@substate.0"/>
+      </substate>
+      <substate name="Ready">
+        <outgoing target="//@types.5/@behaviour/@substate.3">
+          <event xmi:type="thingml:ReceiveMessage" name="m" port="//@types.4/@ports.0" message="//@types.2/@messages.2"/>
+          <action xmi:type="thingml:ActionBlock">
+            <actions xmi:type="thingml:ActionValue" actionValue="cpu_user = m.cpu_user"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="cpu_system = m.cpu_system"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="cpu_wait = m.cpu_wait"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="disk_read = m.disk_read"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="disk_write = m.disk_write"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="mem_used = m.mem_used"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="swap_used = m.swap_used"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="net_eth0_rx =m.net_eth0_rx"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="net_eth0_tx = m.net_eth0_tx"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="net_eth1_rx = m.net_eth1_rx"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="net_eth1_1x = m.net_eth1_1x"/>
+            <actions xmi:type="thingml:ActionValue" actionValue="sch_threads = m.sch_threads"/>
+          </action>
+        </outgoing>
+      </substate>
+      <substate name="Predict">
+        <entry xmi:type="thingml:ActionBlock">
+          <actions xmi:type="thingml:DAPredictAction" dataAnalytics="//@types.5/@dataAnalytics.0" features="//@types.3/@properties.0 //@types.3/@properties.1 //@types.3/@properties.2 //@types.3/@properties.3 //@types.3/@properties.4 //@types.3/@properties.5 //@types.3/@properties.6 //@types.3/@properties.7 //@types.3/@properties.8 //@types.3/@properties.9 //@types.3/@properties.10 //@types.3/@properties.11"/>
+          <actions xmi:type="thingml:ActionValue" actionValue="print &quot;Outage: &quot; + prediction + &quot;\n&quot;"/>
+        </entry>
+        <exit xmi:type="thingml:ActionBlock">
+          <actions xmi:type="thingml:DASaveAction" dataAnalytics="//@types.5/@dataAnalytics.0"/>
+        </exit>
+        <outgoing target="//@types.5/@behaviour/@substate.2"/>
+      </substate>
+    </behaviour>
+  </types>
+  <configs name="Configuration">
+    <instances name="serverInstance" type="//@types.3"/>
+    <instances name="cmsInstance" type="//@types.4"/>
+    <instances name="daPredictorInstance" type="//@types.5"/>
+    <connectors xmi:type="thingml:Connector" cli="//@configs.0/@instances.0" required="//@types.3/@ports.0" srv="//@configs.0/@instances.1" provided="//@types.4/@ports.1"/>
+    <connectors xmi:type="thingml:Connector" cli="//@configs.0/@instances.1" required="//@types.4/@ports.0" srv="//@configs.0/@instances.2" provided="//@types.5/@ports.0"/>
+  </configs>
+</thingml:ThingMLModel>

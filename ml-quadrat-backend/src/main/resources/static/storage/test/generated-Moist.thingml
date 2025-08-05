@@ -1,0 +1,136 @@
+object String
+	@type_checker "String"
+	@c_type "char_*"
+	@java_type "String"
+	@js_type "String"
+;
+datatype Double<4>
+	@type_checker "Real"
+	@c_type "double"
+	@java_type "double"
+	@js_type "float"
+;
+datatype Int32<4>
+	@type_checker "Integer"
+	@c_type "int32_t"
+	@java_type "int"
+	@js_type "int"
+;
+thing fragment StressMsgs {
+	message current_stress(humidity : Double, temperature : Double, step_count : Double);
+	message normal();
+	message alert();
+}
+thing StressWatch includes StressMsgs {
+	required port stress_service { 
+		sends  current_stress
+		receives  normal, alert
+	}
+	property stress_watch_humidity : Double = 11
+	property stress_watch_temperature : Double = 80.3
+	property stress_watch_step_count : Double = 90
+	statechart StressWatchBehaviour init Send {
+		state Send {
+			on entry do
+				print "Sending current stress metrics\n"
+				stress_service!current_stress(stress_watch_humidity,stress_watch_temperature,stress_watch_step_count)
+			end
+			transition -> Receive
+		}
+		state Receive {
+			internal event stress_service?normal
+			action do
+				print "We aight here \n"
+			end
+			internal event stress_service?alert
+			action do
+				print "We Ain't Aight Here \n"
+			end
+		}
+	}
+}
+thing StressDataAnalytics includes StressMsgs {
+	provided port stress_service { 
+		sends  normal, alert
+		receives  current_stress
+	}
+	property da_humidity : Double 
+	property da_temperature : Double 
+	property da_step_count : Double 
+	property stress : String 
+	property stress_prediction : String 
+	data_analytics da @dalib "scikit-learn" {
+		data {
+			dataset "data/Stress-Lysis.csv"
+			labels ON
+			features da_humidity, da_temperature, da_step_count, stress
+			output_features stress
+			timestamps OFF
+		}
+		preprocessing {
+			preprocess_feature_scaler StandardScaler
+		}
+		model {
+			autoML OFF
+			algorithm linear_classifier_logistic_regression my_logistic_regressor(random_state 42, max_iter 100)
+			training_results "data/training.txt"
+		}  
+		
+		evaluation {
+			prediction_results stress_prediction
+		}
+		visualization {
+			plots CLASS_IMBALANCE,HEAT_MAP,MULTIVARIATE_DISTRIBUTION
+		}	
+	}
+	statechart DABehaviour init Preprocess {
+		state Preprocess {
+			on entry do
+				print "Stress Data Analytics: Data Preprocessing\n"
+				da_preprocess da
+			end
+			transition -> Train
+		}
+		state Train {
+			on entry do
+				print "Stress Data Analytics: Data Preprocessing\n"
+				da_preprocess da
+			end
+			transition -> Ready
+		}
+		state Ready {
+			on entry do
+				print "Stress Data Analytics: Ready for Prediction\n"
+			end
+			transition -> Predict
+			event m : stress_service?current_stress
+			action do
+				da_humidity = m.humidity
+				da_temperature = m.temperature
+				da_step_count = m.step_count
+			end
+		}
+		state Predict {
+			on entry do
+				da_predict da(da_humidity,da_temperature,da_step_count)
+				if(stress_prediction=="high") do
+				stress_service!alert()
+				end
+				else do
+				stress_service!normal()	
+				end
+			end
+			on exit do
+				da_save da
+					da_save da
+			end
+			transition -> Ready
+		}
+	}
+}
+configuration StressWatch @compiler "python_java"{
+	instance stressWatch : StressWatch
+	instance stressAnalytics : StressDataAnalytics
+	connector stressWatch.stress_service => stressAnalytics.stress_service
+}
+

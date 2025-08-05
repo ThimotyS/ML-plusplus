@@ -1,0 +1,156 @@
+object String
+	@type_checker `String`
+	@c_type `char_*`
+	@java_type `String`
+	@js_type `String`
+datatype Double<4>
+	@type_checker `Real`
+	@c_type `double`
+	@java_type `double`
+	@js_type `float`
+thing fragment OutageMessages {
+	message request_server_data()
+	message response_server_data(cpu_user : Double, cpu_system : Double, cpu_wait : Double, disk_read : Double, disk_write : Double, mem_used : Double, swap_used : Double, net_eth0_rx : Double, net_eth0_tx : Double, net_eth1_rx : Double, net_eth1_tx : Double, sch_threads : Double)
+	message request_outage_prediction(cpu_user : Double, cpu_system : Double, cpu_wait : Double, disk_read : Double, disk_write : Double, mem_used : Double, swap_used : Double, net_eth0_rx : Double, net_eth0_tx : Double, net_eth1_rx : Double, net_eth1_tx : Double, sch_threads : Double)
+}
+thing Server includes OutageMessages {
+	required port server_service {
+		sends response_server_data receives request_server_data
+	}
+	property cpu_user : Double = 0.467286283756275
+	property cpu_system : Double = 0.1502007371541757
+	property cpu_wait : Double = 0.0
+	property disk_read : Double = 0.0
+	property disk_write : Double = 731.092869
+	property mem_used : Double = 1.1017336E7
+	property swap_used : Double = 462132.0
+	property net_eth0_rx : Double = 66214.013408
+	property net_eth0_tx : Double = 13203.99324
+	property net_eth1_rx : Double = 2011510.66592
+	property net_eth1_tx : Double = 75484.324176
+	property sch_threads : Double = 401.0
+	statechart ServerBehaviour init Initial_State {
+		state Initial_State {
+			internal
+			event server_service?request_server_data
+			action do
+				server_service!response_server_data(cpu_user, cpu_system, cpu_wait, disk_read, disk_write, mem_used, swap_used, net_eth0_rx, net_eth0_tx, net_eth1_rx, net_eth1_tx, sch_threads)
+			end
+		}
+	}
+}
+thing CMS includes OutageMessages {
+	required port outage_service {
+		sends request_outage_prediction
+	}
+	provided port server_service {
+		sends request_server_data receives response_server_data
+	}
+	property cpu_user : Double = 0
+	property cpu_system : Double = 0
+	property cpu_wait : Double = 0
+	property disk_read : Double = 0
+	property disk_write : Double = 0
+	property mem_used : Double = 0
+	property swap_used : Double = 0
+	property net_eth0_rx : Double = 0
+	property net_eth0_tx : Double = 0
+	property net_eth1_rx : Double = 0
+	property net_eth1_tx : Double = 0
+	property sch_threads : Double = 0
+	statechart CMSBehaviour init GetServerData {
+		state GetServerData {
+			on entry do
+				server_service!request_server_data()
+			end
+			transition -> SetData
+		}
+		state SetData {
+			internal
+			event e : server_service?response_server_data
+			action do
+				cpu_user = e.cpu_user
+				cpu_system = e.cpu_system
+				cpu_wait = e.cpu_wait
+				disk_read = e.disk_read
+				disk_write = e.disk_write
+				mem_used = e.mem_used
+				net_eth0_rx = e.net_eth0_rx
+				net_eth0_tx = e.net_eth0_tx
+				net_eth1_rx = e.net_eth1_rx
+				net_eth1_tx = e.net_eth1_rx
+				sch_threads = e.sch_threads
+				outage_service!request_outage_prediction(cpu_user, cpu_system, cpu_wait, disk_read, disk_write, mem_used, swap_used, net_eth0_rx, net_eth0_tx, net_eth1_rx, net_eth1_tx, sch_threads)
+			end
+		}
+	}
+}
+thing OutagePredictor includes OutageMessages {
+	provided port outage_service {
+		receives request_outage_prediction
+	}
+	property cpu_user : Double = 0
+	property cpu_system : Double = 0
+	property cpu_wait : Double = 0
+	property prediction : String = "0"
+	property disk_read : Double = 0
+	property disk_write : Double = 0
+	property mem_used : Double = 0
+	property swap_used : Double = 0
+	property net_eth0_rx : Double = 0
+	property net_eth0_tx : Double = 0
+	property net_eth1_rx : Double = 0
+	property net_eth1_tx : Double = 0
+	property sch_threads : Double = 0
+	data_analytics outage_da @dalib `scikit-learn` { data { dataset "app_server0.csv" labels ON features cpu_user , cpu_system , cpu_wait , disk_read , disk_write , mem_used , swap_used , net_eth0_rx , net_eth0_tx , net_eth1_rx , net_eth1_tx , sch_threads output_features prediction timestamps OFF } preprocessing { preprocess_feature_scaler StandardScaler } model { autoML OFF algorithm nn_multilayer_perceptron my_nn_mlp ( ) } evaluation { prediction_results prediction } }
+	statechart OutageBehaviour init Preprocess {
+		state Preprocess {
+			on entry do
+				da_preprocess outage_da
+			end
+			transition -> Ready
+		}
+		state Train {
+			on entry do
+				da_train outage_da
+			end
+			transition -> Preprocess
+		}
+		state Ready {
+			transition -> Predict
+			event m : outage_service?request_outage_prediction
+			action do
+				cpu_user = m.cpu_user
+				cpu_system = m.cpu_system
+				cpu_wait = m.cpu_wait
+				disk_read = m.disk_read
+				disk_write = m.disk_write
+				mem_used = m.mem_used
+				swap_used = m.swap_used
+				net_eth0_rx = m.net_eth0_rx
+				net_eth0_tx = m.net_eth0_tx
+				net_eth1_rx = m.net_eth1_rx
+				net_eth1_tx = m.net_eth1_tx
+				sch_threads = m.sch_threads
+			end
+		}
+		state Predict {
+			on entry do
+				da_predict outage_da ( cpu_user , cpu_system , cpu_wait , disk_read , disk_write , mem_used , swap_used , net_eth0_rx , net_eth0_tx , net_eth1_rx , net_eth1_tx , sch_threads )
+				print "Outage: " + prediction + "\n"
+			end
+			on exit do
+				da_save outage_da
+				da_save outage_da
+			end
+			transition -> Ready
+		}
+	}
+}
+configuration Configuration @compiler `python_java` {
+	instance serverInstance : Server
+	instance cmsInstance : CMS
+	instance daPredictorInstance : OutagePredictor
+	connector serverInstance.server_service => cmsInstance . server_service
+	connector cmsInstance.outage_service => daPredictorInstance . outage_service
+}

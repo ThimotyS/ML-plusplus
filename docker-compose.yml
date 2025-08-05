@@ -1,0 +1,82 @@
+services:
+  db:
+    image: postgres:16.9-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: mlquadrat
+      POSTGRES_PASSWORD: mlquadrat
+      POSTGRES_DB: mlquadrat
+    ports:
+      - "2345:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
+  sirius-db:
+    image: postgres:15
+    container_name: sirius-web-db
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpwd
+      POSTGRES_DB: sirius-web-db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+
+  frontend: 
+    container_name: ml-quadrat-frontend
+    build:
+      context: ./ml-quadrat-web
+      args:
+        VUE_APP_BACKEND_API: http://localhost:8082
+    restart: always
+    ports:
+      - "8081:80"
+
+  backend:
+    container_name: ml-quadrat-backend
+    build: ./ml-quadrat-backend
+    restart: always
+    ports:
+      - "8082:8088"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mlquadrat
+      SPRING_DATASOURCE_USERNAME: mlquadrat
+      SPRING_DATASOURCE_PASSWORD: mlquadrat
+      FILE_STORAGE_PATH: /var/lib/backend-storage-files
+      FILE_TEMP_PATH: /var/lib/backend-temp-files
+      FILE_SCRIPTS_PATH: /var/lib/scripts
+      FILE_JAVA11_PATH: /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java
+      FILE_CONDA_PATH: /opt/conda/envs/ml2/bin
+    volumes:
+      - type: bind
+        source: ./backend-storage-files
+        target: /var/lib/backend-storage-files
+      - type: bind
+        source: ./backend-temp-files
+        target: /var/lib/backend-temp-files
+    depends_on:
+      - db
+  sirius: 
+    container_name: sirius-web
+    build:
+      context: ./sirius-web
+    restart: always
+    ports:
+      - "8083:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://sirius-db:5432/sirius-web-db
+      SPRING_DATASOURCE_USERNAME: dbuser
+      SPRING_DATASOURCE_PASSWORD: dbpwd
+      SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: 10MB
+      SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: 10MB
+    depends_on:
+      - sirius-db
+volumes:
+  postgres_data:
+  pgdata:
+  backend_storage_files:
+  backend_temp_files:
+

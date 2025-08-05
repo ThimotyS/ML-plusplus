@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<thingML:ThingMLModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:thingML="http://www.thingml.org/xtext/ThingML">
+  <types xmi:type="thingML:ObjectType" name="String">
+    <annotations name="type_checker" value="String"/>
+    <annotations name="c_type" value="char *"/>
+    <annotations name="java_type" value="String"/>
+    <annotations name="js_type" value="String"/>
+  </types>
+  <types xmi:type="thingML:PrimitiveType" name="Double" ByteSize="4">
+    <annotations name="type_checker" value="Real"/>
+    <annotations name="c_type" value="double"/>
+    <annotations name="java_type" value="double"/>
+    <annotations name="js_type" value="float"/>
+  </types>
+  <types xmi:type="thingML:PrimitiveType" name="Int32" ByteSize="4">
+    <annotations name="type_checker" value="Integer"/>
+    <annotations name="c_type" value="int32_t"/>
+    <annotations name="java_type" value="int"/>
+    <annotations name="js_type" value="int"/>
+  </types>
+  <types xmi:type="thingML:Thing" name="StressMsgs" fragment="true">
+    <messages name="current_stress">
+      <parameters name="humidity">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="temperature">
+        <typeRef type="//@types.1"/>
+      </parameters>
+      <parameters name="step_count">
+        <typeRef type="//@types.1"/>
+      </parameters>
+    </messages>
+    <messages name="normal"/>
+    <messages name="alert"/>
+  </types>
+  <types xmi:type="thingML:Thing" name="StressWatch" includes="//@types.3">
+    <ports xmi:type="thingML:RequiredPort" name="stress_service" sends="//@types.3/@messages.0" receives="//@types.3/@messages.1 //@types.3/@messages.2"/>
+    <properties name="stress_watch_humidity">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingML:ExpressionValue" ExpressionValue="11"/>
+      </typeRef>
+    </properties>
+    <properties name="stress_watch_temperature">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingML:ExpressionValue" ExpressionValue="80.3"/>
+      </typeRef>
+    </properties>
+    <properties name="stress_watch_step_count">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingML:ExpressionValue" ExpressionValue="90"/>
+      </typeRef>
+    </properties>
+    <behaviour name="StressWatchBehaviour" initial="//@types.4/@behaviour/@substate.0">
+      <substate name="Send">
+        <entry xmi:type="thingML:ActionBlock">
+          <actions xmi:type="thingML:ActionValue" actionValue="print &quot;Sending current stress metrics\n&quot;"/>
+          <actions xmi:type="thingML:ActionValue" actionValue="stress_service!current_stress(stress_watch_humidity,stress_watch_temperature,stress_watch_step_count)"/>
+        </entry>
+        <outgoing target="//@types.4/@behaviour/@substate.1"/>
+      </substate>
+      <substate name="Receive">
+        <internal>
+          <event xmi:type="thingML:ReceiveMessage" port="//@types.4/@ports.0" message="//@types.3/@messages.1"/>
+          <action xmi:type="thingML:ActionBlock">
+            <actions xmi:type="thingML:ActionValue" actionValue="print &quot;We aight here \n&quot;"/>
+          </action>
+        </internal>
+        <internal>
+          <event xmi:type="thingML:ReceiveMessage" port="//@types.4/@ports.0" message="//@types.3/@messages.2"/>
+          <action xmi:type="thingML:ActionBlock">
+            <actions xmi:type="thingML:ActionValue" actionValue="print &quot;We Ain't Aight Here \n&quot;"/>
+          </action>
+        </internal>
+      </substate>
+    </behaviour>
+  </types>
+  <types xmi:type="thingML:Thing" name="StressDataAnalytics" includes="//@types.3">
+    <ports xmi:type="thingML:ProvidedPort" name="stress_service" sends="//@types.3/@messages.1 //@types.3/@messages.2" receives="//@types.3/@messages.0"/>
+    <properties name="da_humidity">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingML:ExpressionValue"/>
+      </typeRef>
+    </properties>
+    <properties name="da_temperature">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingML:ExpressionValue"/>
+      </typeRef>
+    </properties>
+    <properties name="da_step_count">
+      <typeRef type="//@types.1">
+        <cardinality xmi:type="thingML:ExpressionValue"/>
+      </typeRef>
+    </properties>
+    <properties name="stress">
+      <typeRef type="//@types.0">
+        <cardinality xmi:type="thingML:ExpressionValue"/>
+      </typeRef>
+    </properties>
+    <properties name="stress_prediction">
+      <typeRef type="//@types.0">
+        <cardinality xmi:type="thingML:ExpressionValue"/>
+      </typeRef>
+    </properties>
+    <dataAnalytics name="da" dataset="data/Stress-Lysis.csv" labels="ON" timestamps="OFF" preprocess_feature_scaler="StandardScaler" autoML="OFF" trainingResults="data/training.txt" plots="CLASS_IMBALANCE,HEAT_MAP,MULTIVARIATE_DISTRIBUTION" features="//@types.5/@properties.0 //@types.5/@properties.1 //@types.5/@properties.2 //@types.5/@properties.3" output_features="//@types.5/@properties.3" predictionResults="//@types.5/@properties.4">
+      <modelAlgorithm xmi:type="thingML:LinearClassifierLogisticRegression" name="my_logistic_regressor">
+        <random_state intValue="42"/>
+        <max_iter intValue="100"/>
+      </modelAlgorithm>
+    </dataAnalytics>
+    <behaviour name="DABehaviour" initial="//@types.5/@behaviour/@substate.0">
+      <substate name="Preprocess">
+        <entry xmi:type="thingML:ActionBlock">
+          <actions xmi:type="thingML:ActionValue" actionValue="print &quot;Stress Data Analytics: Data Preprocessing\n&quot;"/>
+          <actions xmi:type="thingML:ActionValue" actionValue="da_preprocess da"/>
+        </entry>
+        <outgoing target="//@types.5/@behaviour/@substate.1"/>
+      </substate>
+      <substate name="Train">
+        <entry xmi:type="thingML:ActionBlock">
+          <actions xmi:type="thingML:ActionValue" actionValue="print &quot;Stress Data Analytics: Data Preprocessing\n&quot;"/>
+          <actions xmi:type="thingML:ActionValue" actionValue="da_preprocess da"/>
+        </entry>
+        <outgoing target="//@types.5/@behaviour/@substate.2"/>
+      </substate>
+      <substate name="Ready">
+        <entry xmi:type="thingML:ActionBlock">
+          <actions xmi:type="thingML:ActionValue" actionValue="print &quot;Stress Data Analytics: Ready for Prediction\n&quot;"/>
+        </entry>
+        <outgoing target="//@types.5/@behaviour/@substate.3">
+          <event xmi:type="thingML:ReceiveMessage" name="m" port="//@types.4/@ports.0" message="//@types.3/@messages.0"/>
+          <action xmi:type="thingML:ActionBlock">
+            <actions xmi:type="thingML:ActionValue" actionValue="da_humidity = m.humidity"/>
+            <actions xmi:type="thingML:ActionValue" actionValue="da_temperature = m.temperature"/>
+            <actions xmi:type="thingML:ActionValue" actionValue="da_step_count = m.step_count"/>
+          </action>
+        </outgoing>
+      </substate>
+      <substate name="Predict">
+        <entry xmi:type="thingML:ActionBlock">
+          <actions xmi:type="thingML:ActionValue" actionValue="da_predict da(da_humidity,da_temperature,da_step_count)"/>
+          <actions xmi:type="thingML:ActionValue" actionValue="if(stress_prediction==&quot;high&quot;) do"/>
+          <actions xmi:type="thingML:ActionValue" actionValue="stress_service!alert()"/>
+          <actions xmi:type="thingML:ActionValue" actionValue="end"/>
+          <actions xmi:type="thingML:ActionValue" actionValue="else do"/>
+          <actions xmi:type="thingML:ActionValue" actionValue="stress_service!normal()&#x9;"/>
+          <actions/>
+          <actions xmi:type="thingML:ActionValue" actionValue="end"/>
+        </entry>
+        <exit xmi:type="thingML:ActionBlock">
+          <actions xmi:type="thingML:ActionValue" actionValue="da_save da"/>
+        </exit>
+        <outgoing target="//@types.5/@behaviour/@substate.2"/>
+      </substate>
+    </behaviour>
+  </types>
+  <configs name="StressWatch">
+    <instances name="stressWatch" type="//@types.4"/>
+    <instances name="stressAnalytics" type="//@types.5"/>
+    <connectors xmi:type="thingML:Connector" cli="//@configs.0/@instances.0" required="//@types.4/@ports.0" srv="//@configs.0/@instances.1" provided="//@types.5/@ports.0"/>
+  </configs>
+</thingML:ThingMLModel>
