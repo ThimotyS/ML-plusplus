@@ -1,3 +1,18 @@
+FROM maven:3.9.6-eclipse-temurin-21 as build
+
+# Set working directory
+WORKDIR /app
+
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy source code
+COPY src ./src
+
+# Build the application
+RUN mvn clean package -DskipTests
+
 # Start from Ubuntu 
 FROM ubuntu
 
@@ -26,7 +41,7 @@ RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkg
 
 # Copy your Spring Boot jar
 ARG JAR_FILE=target/*.jar
-COPY ./target/ml-quadrat-backend-0.0.1-SNAPSHOT.jar /app.jar
+COPY --from=build /app/target/*.jar /app.jar
 
 # Copy scripts and make executable
 RUN mkdir -p /var/lib/scripts
