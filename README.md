@@ -16,30 +16,16 @@ To run code generators in offline mode:
 ## Clone the repository
 ```bash
   git clone https://github.com/ThimotyS/ML-plusplus
-  cd ML-plusplus
-```
-## Create two empty directories within the project root
-Fromt project root, do the following:
-```bash
-  mkdir backend-storage-files
-  mkdir backend-temp-files
-```
-## Build the back-end
-Fromt project root, do the following:
-```bash
-  cd ml-quadrat-backend
-  mvn clean package
-```
-
-## Build the front-end
-Fromt project root, do the following:
-```bash
-  cd ml-quadrat-web
-  npm run build
 ```
 
 ## Run the project with docker
+From project root, run:
 ```bash
   docker-compose build
   docker-compose up
 ```
+
+## Local development:
+Script files are located in docker-full-stack/ml-quadrat-backend/src/main/resources/scripts
+If you have .thingml files then you can use mlquadrat.jar to compile them.
+If you have .xml files from Sirius Web, you first need to use sirius_web_to_desktop.jar using java21, then m2c.jar using java21 and mlquadrat.jar using java11
