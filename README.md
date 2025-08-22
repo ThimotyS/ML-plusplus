@@ -32,5 +32,9 @@ Sirius Web will be on: localhost:8083
 
 ## Local development:
 Script files are located in docker-full-stack/ml-quadrat-backend/src/main/resources/scripts
-If you have .thingml files then you can use mlquadrat.jar to compile them.
-If you have .xml files from Sirius Web, you first need to use sirius_web_to_desktop.jar using java21, then m2c.jar using java21 and mlquadrat.jar using java11
+### ML2++ Files
+- Use java11 to compile projects using mlquadrat.jar
+### Sirius Web files
+- Using java21 transform project to EMF ready project: sirius_web_to_desktop.jar
+- Using Java21 transform EMF project to ML2++ code: m2c.jar
+- Using java11 transform ML2++ file to a project:  mlquadrat.jar
