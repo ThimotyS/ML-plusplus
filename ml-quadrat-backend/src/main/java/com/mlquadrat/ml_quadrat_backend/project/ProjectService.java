@@ -134,12 +134,15 @@ public class ProjectService {
 		return Paths.get(result2);
 	}
 	public void addProject(MultipartFile file) throws Exception {
+		System.out.println("Adding new Sirius Web Project");
 		MLUser user = this.mlUserService.getAuthenticatedUser();
 		
 		Optional<Project> proj = repo.findByName(file.getOriginalFilename());
 		if (proj.isPresent()) {
 			throw new MLQuadratError("Project already exists");
 		}
+		System.out.println("Saving original .xml file");
+
 		Path destinationPath;
 		try {
 			destinationPath = this.storageService.storeOriginalFile(file);
@@ -148,22 +151,8 @@ public class ProjectService {
 			throw new MLQuadratError("Can't save original file into database: " + ex.getMessage());
 		}
 		Project newProject = new Project(null, file.getOriginalFilename(), null,null, user, destinationPath.toString(), null);
-		
-//		Path scriptPath1 = Paths.get(System.getProperty("user.dir") + "/scripts/sirius_web_to_desktop.jar");
-//		ProcessBuilder pB1 = new ProcessBuilder("java", "-jar", scriptPath1.toString(), newProject.getOriginalFilePath());
-//		Process process1 = pB1.start();
-//
-//		BufferedReader reader1 = new BufferedReader(new InputStreamReader(process1.getInputStream()));
-//		StringBuilder output1 = new StringBuilder();
-//		String line1;
-//		
-//		int exitCode1 = process1.waitFor();
-//		while ((line1 = reader1.readLine()) != null) {
-//			output1.append(line1).append(System.lineSeparator());
-//		}
-//		String result = output1.toString().trim();
-//		
-//		Path filePath1 = Paths.get(result);
+		System.out.println("Converting Sirius to EMF");
+
 		
 		Path filePath1;
 		try {
@@ -174,6 +163,7 @@ public class ProjectService {
 			// TODO Auto-generated catch block
 			throw new MLQuadratError("Can't convert sirius web .xml to EMF xml format: " + ex.getMessage());
 		}
+		System.out.println("Converting EMF to ML2++");
 
 		Path filePath2;
 		try {
@@ -183,7 +173,8 @@ public class ProjectService {
 		} catch (MLQuadratError ex) {
 			throw new MLQuadratError("Can't convert to .thingml file: " + ex.getMessage());
 		}
-		
+		System.out.println("Saving new Sirius Project");
+
 		newProject.setUploadDate(new Date());
 		repo.save(newProject);
 	}
@@ -257,7 +248,7 @@ public class ProjectService {
 	public void deleteProject(Integer projectId) throws Exception {
 		MLUser user = this.mlUserService.getAuthenticatedUser();
 		Project proj = this.checkUserProject(user, projectId);
-
+		System.out.println("SKIBIDI");
 		this.storageService.deleteProjectFiles(proj);
 		this.repo.delete(proj);
 	}

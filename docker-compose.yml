@@ -51,12 +51,8 @@ services:
       FILE_JAVA11_PATH: /usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java
       FILE_CONDA_PATH: /opt/conda/envs/ml2/bin
     volumes:
-      - type: bind
-        source: ./backend-storage-files
-        target: /var/lib/backend-storage-files
-      - type: bind
-        source: ./backend-temp-files
-        target: /var/lib/backend-temp-files
+      - backend_storage_files:/var/lib/backend-storage-files
+      - backend_temp_files:/var/lib/backend-temp-files
     depends_on:
       - db
   sirius: 
