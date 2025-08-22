@@ -7,8 +7,8 @@ To run the project
 
 # Optional:
 To run code generators for local development:
-- [Java11]([https://www.java.com/nl/](https://jdk.java.net/11/))
-- [java21]([https://www.java.com/nl/](https://jdk.java.net/21/))
+- [Java11](https://jdk.java.net/11/)
+- [java21](https://jdk.java.net/21/)
 - [Maven](https://maven.apache.org/index.html)
 # Getting Started
 ## Clone the repository
