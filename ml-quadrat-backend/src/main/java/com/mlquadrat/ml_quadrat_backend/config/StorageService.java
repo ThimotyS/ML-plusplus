@@ -132,35 +132,25 @@ public class StorageService {
 	}
 	
 	public void deleteProjectFiles(Project proj) throws Exception  {
-//		if(proj.getOriginalFilePath() != null) Files.deleteIfExists(Paths.get(proj.getOriginalFilePath()));
-//		if(proj.getConvertedFilePath() != null) Files.deleteIfExists(Paths.get(proj.getConvertedFilePath()));
-//		if(proj.getThingMLFilePath() != null) Files.deleteIfExists(Paths.get(proj.getThingMLFilePath()));
-//		if(proj.getThingMLProjectOutputPath() != null) Files.deleteIfExists(Paths.get(proj.getThingMLProjectOutputPath()));\
-		System.out.println("SKIBIDI1");
+
 		this.deleteFile(proj.getOriginalFilePath());
 		proj.setOriginalFileName(null);
 		proj.setOriginalFilePath(null);
-		System.out.println("SKIBIDI2");
-		System.out.print(proj.getConvertedFilePath());
 		this.deleteFile(proj.getConvertedFilePath());
 		proj.setConvertedFileName(null);
 		proj.setConvertedFilePath(null);
-		System.out.println("SKIBIDI3");
 
 		this.deleteFile(proj.getThingMLFilePath());
 		proj.setThingMLFileName(null);
 		proj.setThingMLFilePath(null);
-		System.out.println("SKIBIDI4");
 
 		this.deleteDir(proj.getThingMLProjectPath());
 		proj.setThingMLProjectName(null);
 		proj.setThingMLProjectPath(null);
-		System.out.println("SKIBIDI5");
 
 		this.deleteFile(proj.getThingMLProjectOutputPath());
 		proj.setThingMLProjectOutputPath(null);
 		proj.setThingMLProjectOutputPath(null);
-		System.out.println("SKIBIDI6");
 
 		this.deleteFile(proj.getDatasetPath());
 		proj.setDatasetName(null);
@@ -172,9 +162,6 @@ public class StorageService {
 
 		Path root = this.getUserDir().toAbsolutePath();
 		Path filePath = Paths.get(fileName).toAbsolutePath();
-		System.out.println("DELETING FILE: " + fileName );
-		System.out.println("ROOT: " + root.toString() );
-		System.out.println("FILEPATH: " + filePath.toString() );
 
 		if(filePath.equals(root))return;
 		
